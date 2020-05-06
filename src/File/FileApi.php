@@ -141,6 +141,34 @@ class FileApi extends BaseApiAbstract
     }
 
     /**
+     * Downloads the original source file from Smartling.
+     *
+     * It is important to check the HTTP response status code. If Smartling finds
+     * and returns the file normally, you will receive a 200 SUCCESS response.
+     * If you receive any other response status code than 200, the requested
+     * files will not be part of the response.
+     *
+     * @param string $fileUri
+     *   Value that uniquely identifies the downloaded file.
+     *
+     * @return string
+     *   File content
+     *
+     * @throws \Smartling\Exceptions\SmartlingApiException
+     *
+     * @see https://api-reference.smartling.com/#operation/downloadSourceFile
+     */
+    public function downloadSourceFile($fileUri)
+    {
+        $params['fileUri'] = $fileUri;
+
+        $requestData = $this->getDefaultRequestData('query', $params);
+        unset($requestData['headers']['Accept']);
+
+        return $this->sendRequest('file', $requestData, self::HTTP_METHOD_GET, true);
+    }
+
+    /**
      * Downloads the requested file from Smartling.
      *
      * It is important to check the HTTP response status code. If Smartling finds
